@@ -17,38 +17,42 @@ consumer_secret =keylist[1]
 access_token        =keylist[2]
 access_token_secret =keylist[3]
 
+
+
 def printKeyVals(data, indent=0):
-	if isinstance(data, list):
-		print
-		for item in data:
-			printKeyVals(item, indent+1)
-	elif isinstance(data, dict):
-		print
-		for k, v in data.items():
-			if isinstance(v, dict):
-				print("    " * indent, k + ":")
-			else :
-				print("    " * indent, k + ":", end="")
-			printKeyVals(v, indent + 1)
-	else:
-		try :
-			print(data)
-		except :
-			try :
-				print(data.encode('utf-8'))
-			except :
-				print("failed to decode")
+    if isinstance(data, list):
+        print()
+        for item in data:
+            print("    "*indent,end="")
+            printKeyVals(item, indent+1)
+    elif isinstance(data, dict):
+        print()
+        for k, v in data.items():
+            if isinstance(v, dict):
+                print("    " * indent, k + ":")
+            else :
+                print("    " * indent, k + ":",end ="")
+            printKeyVals(v, indent + 1)
+    else:
+        try:
+            print(data)         
+        except:
+            try:
+                print(data.encode('utf-8'))
+            except:
+                print("failed to decode")
 
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
     This is a basic listener that just prints received tweets to stdout.
     """
-	
+    
     def on_data(self, data):
         tweet = json.loads(data)
+        print("------------------------START TWEET--------------------------------------")
         printKeyVals(tweet)
-        print("--------------------------------------------------------------------")
+        print("--------------------------END TWEET--------------------------------")
         return True
 
     def on_error(self, status):
@@ -65,3 +69,4 @@ if __name__ == '__main__':
 
     stream = Stream(auth, l)
     stream.filter(track=['@ClintonNews','@HillaryClinton'])
+
