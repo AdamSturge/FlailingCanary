@@ -4,16 +4,18 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 import json
 
+keylist = open("config.txt").read().splitlines()
+
 
 # Go to http://apps.twitter.com and create an app.
 # The consumer key and secret will be generated for you after
-consumer_key    ="bdcLMq0rtUOKBJ74sIbOFnD65"
-consumer_secret ="gLU5Z996oPt7T40R90lrze4xG0XZALLtgL3rbRVEG7C9Lh6VcE"
+consumer_key    =keylist[0]
+consumer_secret =keylist[1]
 
 # After the step above, you will be redirected to your app's page.
 # Create an access token under the the "Your access token" section
-access_token        ="3164358566-Me63F9NCXUWqrQufn4shf7EWgzWzM0uzPoRxRCs"
-access_token_secret ="uRaKRbnx4vefqpCIIxzyOaQOSgfebfBWFxkQy6QIphJch"
+access_token        =keylist[2]
+access_token_secret =keylist[3]
 
 def printKeyVals(data, indent=0):
 	if isinstance(data, list):
@@ -22,7 +24,7 @@ def printKeyVals(data, indent=0):
 			printKeyVals(item, indent+1)
 	elif isinstance(data, dict):
 		print
-		for k, v in data.iteritems():
+		for k, v in data.items():
 			if isinstance(v, dict):
 				print("    " * indent, k + ":")
 			else :
@@ -44,37 +46,17 @@ class StdOutListener(StreamListener):
     """
 	
     def on_data(self, data):
-		tweet = json.loads(data);
-		printKeyVals(tweet);
-		'''
-		for key,value in tweet.items() :
-			if key != 'user' :
-				try :
-					print(str(key) + " : " + str(value))
-				except :
-					try :
-						print(str(key) + " : " + str(value).encode('utf-8'))
-					except :
-						print("Failed to decode tweet");
-		
-		for key,valye in user.items() :
-			try :
-				print(str(key) + " : " + str(value))
-			except :
-				try :
-					print(str(key) + " : " + str(value).encode('utf-8'))
-				except :
-					print("Failed to decode tweet");
-		'''
-		print("--------------------------------------------------------------------")
-		return True
+        tweet = json.loads(data)
+        printKeyVals(tweet)
+        print("--------------------------------------------------------------------")
+        return True
 
     def on_error(self, status):
-		print("error : " + str(status))
-		if (status == 420):
-			#returning False in on_data disconnects the stream
-			return False
-		return True
+        print("error : " + str(status))
+        if (status == 420):
+            #returning False in on_data disconnects the stream
+            return False
+        return True
 
 if __name__ == '__main__':
     l = StdOutListener()
