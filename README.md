@@ -1,7 +1,3 @@
 # FlailingCanary
 ## Key file
-config.txt should be a four line text file containing the following in order:
-Consumer Key
-Consumer Secret
-Access Token
-Access Token Secret
+CanaryConfig_template should be renamed to CanaryConfig.py. All relevant info should be included there.
