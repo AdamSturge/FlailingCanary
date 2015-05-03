@@ -1,0 +1,9 @@
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
+taglist = []
+host = "54.69.141.177"
+user = "canary_user"
+password = ""
+database = "canary"
