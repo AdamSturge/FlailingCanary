@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	auth = OAuthHandler(config.consumer_key, config.consumer_secret)
 	auth.set_access_token(config.access_token, config.access_token_secret)
 	api_inst = API(auth, parser = parsers.JSONParser())
-	l = api_inst.search(q="haircut", count=1)
+	l = api_inst.search(q="haircut", count=3)
 	# END GETTING TWEETS
 	
 	#BEGIN CONENCTING TO DATABASE
@@ -40,18 +40,18 @@ if __name__ == '__main__':
 	cursor = connection.cursor()
 	# END CONENCTING TO DATABASE
 	
-	#BEGIN DEFING QUERY
+	#BEGIN DEFINING QUERY
 	sql = "INSERT INTO tweets (tweet_text,hashtags,lang,urls,trending,user_id,retweet_count,source,possibly_sensative) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 	#END DEFINING QUERY
 	
 	# BEGIN EXTRACTING TWEET INFO
 	for tweet in l["statuses"] :
-		tweet_text    = tweet["text"] if ("text" in tweet) else ""
-		lang          = tweet["lang"] if ("lang" in tweet) else ""
-		source        = tweet["source"] if ("source" in tweet) else ""
+		tweet_text    = tweet["text"].encode('utf-8') if ("text" in tweet) else ""
+		lang          = tweet["lang"].encode('utf-8') if ("lang" in tweet) else ""
+		source        = tweet["source"].encode('utf-8') if ("source" in tweet) else ""
 		sensitive     = tweet["possibly_sensitive"] if ("possibly_sensitive" in tweet) else False
 		retweet_count = tweet["retweet_count"] if ("retweet_count" in tweet) else 0
-		trending      = tweet["trending"] if ("trending" in tweet) else "" # GOING TO HAVE TO REMOVE THIS, IT DOESN'T SHOW UP IN SEARCH (DOES IN STREAM THOUGH)
+		trending      = tweet["trending"].encode('utf-8') if ("trending" in tweet) else "" # GOING TO HAVE TO REMOVE THIS, IT DOESN'T SHOW UP IN SEARCH (DOES IN STREAM THOUGH)
 		
 		if "entities" in tweet :
 			hashtags = tweet["entities"]["hashtags"] if ("hashtags" in tweet["entities"]) else [""]
@@ -66,10 +66,8 @@ if __name__ == '__main__':
 			user_id = -1
 			
 		#BEGIN INSERTING DATA INTO DATABASE
-		print(type(hashtags))
-		print(type(urls))
-		hashtags = ",".join(hashtags)
-		urls     = ",".join(urls)
+		hashtags = ",".join(hashtags).encode('utf-8')
+		urls     = ",".join(urls).encode('utf-8')
 		
 		cursor.execute(sql,(tweet_text,hashtags,lang,urls,trending,user_id,retweet_count,source,sensitive))
 		connection.commit()
