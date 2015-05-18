@@ -1,0 +1,16 @@
+{
+    "contents" : "#Define linear regression function\nY_hat = function(B,X){\n  return (t(X)%*%B)\n}\n\n# Load data and solve for model parameters (stored in Beta)\nload(\"ESL.mixture.rda\")\nX = cbind(rep(1,200),ESL.mixture$x)\ny = ESL.mixture$y\ndet = det(t(X)%*%X)\nif(det != 0){\n  Beta = solve(t(X)%*%X)%*%t(X)%*%y\n}else{\n  print(\"X is signular, could not solve for Beta\")\n  Beta = c(0,0,0)\n}\n\n# Define orange-blue classifier\nob_classify = function(y_hat){\n  if(y_hat >= 0.5){\n    return ('ORANGE')\n  }else{\n    return ('BLUE')\n  }\n}\n\n# Define color coded training dataset\nTColors = unlist(lapply(y,ob_classify))\nTData   = cbind(ESL.mixture$x,TColors)\ncolnames(TData , do.NULL = FALSE)\ncolnames(TData) <- c(\"x1\",\"x2\",\"color\")\n\n# Define color coded latice\nDensity = 0.25\nGridMin = -2\nGridMax = 4\nGridLine = seq(GridMin,GridMax,Density)\nRowCount = length(GridLine)^2 + 1\nColCount = 3\nGrid = matrix(nrow=RowCount,ncol=ColCount)\ncolnames(Grid , do.NULL = FALSE)\ncolnames(Grid) <- c(\"x1\",\"x2\",\"color\")\nrowIndex = 1\nfor(i in 1:length(GridLine))\n{\n  x1 = GridLine[i]\n  for(j in 1:length(GridLine))\n  {\n    x2 = GridLine[j]\n    input = c(1,x1,x2)\n    y_hat = input%*%Beta\n    color = ob_classify(y_hat)\n    Grid[rowIndex,] = c(x1,x2,color)\n    rowIndex = rowIndex + 1\n  }\n}\n\n#Solve for decision boundry\n#j = expression(Beta[1]*1 + Beta[2]*x1 + Beta[3]*x2)\nDBoundry = data.frame(t=GridLine)\nparam_1 = function(t) { return (t) }\nparam_2 = function(t) { return ((0.5 - Beta[1] - Beta[2]*t)/Beta[3])}\nDBoundry$x1=param_1(dat$t)\nDBoundry$x2=param_2(dat$t)\n\n# Create plot\nplot(Grid[,1],Grid[,2],col=Grid[,3],xlab='X1',ylab='X2',xaxt='n',yaxt='n',ylim=c(GridMin, GridMax),pch = 20,cex=0.75,lwd=1)\npar(new=TRUE)\nplot(TData[,1],TData[,2],col=TData[,3],xlab='',ylab='',xaxt='n',yaxt='n',ylim=c(GridMin, GridMax),pch = 1,cex=1.5,lwd=2)\npar(new=TRUE)\nplot(DBoundry$x1,DBoundry$x2,type=\"l\",xlab='',ylab='',xaxt='n',yaxt='n',ylim=c(GridMin, GridMax))\npar(new=FALSE)\n\n\n\n",
+    "created" : 1431296422902.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3425153",
+    "id" : "DC438C6D",
+    "lastKnownWriteTime" : 1431659509,
+    "path" : "C:/Program Files/R/R projects/Linear Fit Test/Linear_Fit_Test.R",
+    "project_path" : "Linear_Fit_Test.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
