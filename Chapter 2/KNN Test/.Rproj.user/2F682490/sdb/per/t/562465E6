@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1432272996756.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "562465E6",
+    "lastKnownWriteTime" : 7741240723082584096,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "grid",
+        "contentUrl" : "content?title=grid&file=2e69f842f8e64be8bbbfba078e1bbe5f.htm",
+        "displayedObservations" : "1000",
+        "displayedVariables" : 3,
+        "totalObservations" : "2601",
+        "variables" : "3"
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

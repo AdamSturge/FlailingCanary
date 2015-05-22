@@ -1,0 +1,17 @@
+{
+    "contents" : "# Define KNN values\nk <- 15\nmetric <- function(x,y){\n  diff <- as.matrix(x - y)\n  return (norm(diff))\n}\nKNNAvg <- function(x,k){\n  s = sum(x)\n  return (s/k);\n}\n\n# Load data \nload(\"ESL.mixture.rda\")\nx <- ESL.mixture$x\ncolnames(x , do.NULL <- FALSE)\ncolnames(x) <- c(\"x1\",\"x2\")\ny <- ESL.mixture$y\n\n\n# Define orange-blue classifier\nobClassify <- function(yHat){\n  if(yHat >= 0.5){\n    return ('ORANGE')\n  }else{\n    return ('BLUE')\n  }\n}\n\n# Define color coded training dataset\ntColors = unlist(lapply(y,obClassify))\ntData   = cbind(ESL.mixture$x,tColors)\ncolnames(TData , do.NULL = FALSE)\ncolnames(TData) <- c(\"x1\",\"x2\",\"color\")\n\n# Define Grid\ndensity <- 0.20\ngridMin <- -3\ngridMax <- 7\ngridLine <- seq(gridMin,gridMax,density)\nrowCount <- length(gridLine)^2\ncolCount <- 3\ngrid <- matrix(nrow=rowCount,ncol=colCount)\ncolnames(grid , do.NULL=FALSE)\ncolnames(grid) <- c(\"x1\",\"x2\",\"color\")\nrowIndex <- 1\nfor(i in 1:length(gridLine))\n{\n  x1 <- gridLine[i]\n  for(j in 1:length(gridLine))\n  {\n    x2 <- gridLine[j]   \n    grid[rowIndex,] <- c(x1,x2,\"Black\")\n    rowIndex <- rowIndex + 1\n  }\n}\n    \n# Compute KNN value for each point in grid\nfor(i in 1:nrow(grid)){\n  # compute distances\n  classificationPoint <- as.numeric(cbind(grid[[i,1]],grid[[i,2]]))\n  distances <- cbind(rep(0,nrow(x)),rep(0,nrow(x)))\n  colnames(distances , do.NULL=FALSE)\n  colnames(distances) <- c(\"distance\",\"y_val\")\n  for(j in 1:nrow(x)){\n    trainingPoint <- x[j,]\n    distances[j,1] <- metric(classificationPoint,trainingPoint)\n    distances[j,2] <- y[j]\n  }\n  \n  #order by distance\n  distances <- distances[order(distances[,1]),]\n  \n  # select top k contributors\n  distances <- head(distances,k)\n  \n  #compute average and classify\n  yHat <- KNNAvg(distances[,2],k)\n  grid[i,3] <- obClassify(yHat)\n  \n}\n\n# Create plot\nplot(grid[,1],grid[,2],col=grid[,3],xlab='X1',ylab='X2',xaxt='n',yaxt='n',xlim=c(gridMin, gridMax),ylim=c(gridMin, gridMax),pch = 20,cex=0.75,lwd=1)\npar(new=TRUE)\nplot(tData[,1],tData[,2],col=tData[,3],xlab='',ylab='',xaxt='n',yaxt='n',xlim=c(gridMin, gridMax),ylim=c(gridMin, gridMax),pch = 1,cex=1.5,lwd=2)\npar(new=FALSE)",
+    "created" : 1431987909788.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "670110267",
+    "id" : "694B8A23",
+    "lastKnownWriteTime" : 1432273064,
+    "path" : "C:/Program Files/R/R projects/KNN Test/KNN Test.R",
+    "project_path" : "KNN Test.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
